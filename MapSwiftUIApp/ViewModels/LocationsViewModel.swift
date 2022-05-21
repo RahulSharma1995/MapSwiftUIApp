@@ -21,6 +21,8 @@ class LocationsViewModel: ObservableObject{
     
     @Published var mkMapRegion: MKCoordinateRegion = MKCoordinateRegion()
     
+    @Published var showLocationList: Bool = false
+    
     let mkMapSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     
     init() {
@@ -34,6 +36,34 @@ class LocationsViewModel: ObservableObject{
         withAnimation(.easeInOut) {
             mkMapRegion = MKCoordinateRegion(center: location.coordinates, span: mkMapSpan)
         }
+    }
+    
+    func showLocationListVisiblityChange(){
+        withAnimation(.easeInOut) {
+            showLocationList = !showLocationList
+        }
+    }
+    
+    func changeMapLocation(location: LocationModel){
+        withAnimation(.easeInOut) {
+            mapLocation = location
+            showLocationList = false
+        }
+    }
+    
+    func nextLocationButtonPressed(){
+        guard let currentIndex = locations.firstIndex(where: { $0 == mapLocation } ) else { return }
+        let nextIndex = currentIndex + 1
+        guard locations.indices.contains(nextIndex) else {
+            // next Index is not valid
+            guard let firstLocation = locations.first else { return }
+            changeMapLocation(location: firstLocation)
+            return
+        }
+        // next Index is valid
+        let nextLocation = locations[nextIndex]
+        changeMapLocation(location: nextLocation)
+        
     }
     
 }

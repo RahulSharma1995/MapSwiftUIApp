@@ -40,9 +40,9 @@ class LocationsDataService {
             coordinates: CLLocationCoordinate2D(latitude: 41.9009, longitude: 12.4833),
             description: "The Trevi Fountain is a fountain in the Trevi district in Rome, Italy, designed by Italian architect Nicola Salvi and completed by Giuseppe Pannini and several others. Standing 26.3 metres high and 49.15 metres wide, it is the largest Baroque fountain in the city and one of the most famous fountains in the world.",
             imageNames: [
-                "ch-1",
-                "ch-2",
-                "ch-3",
+                "rome-trevifountain-1",
+                "rome-trevifountain-3",
+                "rome-trevifountain-2",
             ],
             link: "https://en.wikipedia.org/wiki/Trevi_Fountain"),
         LocationModel(
