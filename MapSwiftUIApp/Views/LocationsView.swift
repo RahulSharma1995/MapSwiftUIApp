@@ -10,36 +10,24 @@ import MapKit
 
 struct LocationsView: View {
     
+    let maxWidthForIpad: CGFloat = 700
     @EnvironmentObject var vm: LocationsViewModel
     @State private var mkMapRegion: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 27.1751, longitude: 78.0421), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     
     var body: some View {
         ZStack {
-            Map(coordinateRegion: $vm.mkMapRegion)
+            mapView
                 .ignoresSafeArea()
-            
             VStack(spacing: 0) {
-                
                 heraderView
+                    .frame(maxWidth: maxWidthForIpad)
                     .padding()
-                
-                
                 Spacer()
-                
-                ZStack{
-                    ForEach(vm.locations) { location in
-                        if vm.mapLocation == location {
-                            LocationDetailView(location: location)
-                                .shadow(color: Color.black.opacity(0.3), radius: 20)
-                                .padding()
-                                .transition(.asymmetric(
-                                    insertion: .move(edge: .trailing),
-                                    removal: .move(edge: .leading)))
-                        }
-                    }
-                }
+                locationsStackView
             }
-            
+        }
+        .sheet(item: $vm.sheetLocation, onDismiss: nil) { location in
+            LocationDetailsView(location: location)
         }
     }
 }
@@ -52,6 +40,21 @@ struct LocationsView_Previews: PreviewProvider {
 }
 
 extension LocationsView {
+    
+    private var mapView: some View {
+        Map(coordinateRegion: $vm.mkMapRegion,
+            annotationItems: vm.locations,
+            annotationContent: { location in
+            MapAnnotation(coordinate: location.coordinates) {
+                LocationMapAnotationView()
+                    .scaleEffect(vm.mapLocation == location ? 1 : 0.7)
+                    .shadow(radius: 10)
+                    .onTapGesture {
+                        vm.changeMapLocation(location: location)
+                    }
+            }
+        })
+    }
     
     private var heraderView: some View {
         VStack {
@@ -83,6 +86,23 @@ extension LocationsView {
         .background(.thinMaterial)
         .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
+    }
+    
+    private var locationsStackView: some View {
+        ZStack {
+            ForEach(vm.locations) { location in
+                if vm.mapLocation == location {
+                    LocationPreview(location: location)
+                        .shadow(color: Color.black.opacity(0.3), radius: 20)
+                        .padding()
+                        .frame(maxWidth: maxWidthForIpad)
+                        .frame(maxWidth: .infinity)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .trailing),
+                            removal: .move(edge: .leading)))
+                }
+            }
+        }
     }
     
 }

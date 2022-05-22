@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LocationDetailView: View {
+struct LocationPreview: View {
     @EnvironmentObject private var vm: LocationsViewModel
     let location: LocationModel
     var body: some View {
@@ -32,18 +32,18 @@ struct LocationDetailView: View {
     }
 }
 
-struct LocationDetailView_Previews: PreviewProvider {
+struct LocationPreview_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.green.ignoresSafeArea()
             
-            LocationDetailView(location: LocationsDataService.locations.first!)
+            LocationPreview(location: LocationsDataService.locations.first!)
                 .environmentObject(LocationsViewModel())
         }
     }
 }
 
-extension LocationDetailView {
+extension LocationPreview {
     
     private var imageSelection: some View {
         ZStack {
@@ -74,7 +74,7 @@ extension LocationDetailView {
     
     private var learnMoreButton: some View {
         Button {
-            
+            vm.sheetLocation = location
         } label: {
             Text("Learn more")
                 .font(.headline)
